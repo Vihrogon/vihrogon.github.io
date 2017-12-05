@@ -1,0 +1,23 @@
+body {
+  margin: 0px;
+}
+header {
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  background-color: #339933;
+  overflow: visible;
+}
+button {
+  display: inline-block;
+  margin: 10px;
+  width: 200px;
+  height: 200px;
+}
+h1 {
+  display: inline-block;
+  text-align: center;
+  //width: 80%;
+  //margin: auto;
+  font-size: 700%;
+}
