@@ -6,6 +6,7 @@
 <title>Snake</title>
 <style>
   html, body {
+    position: relative;
     margin: 0px;
     height: 100%;
     overflow: hidden;
@@ -13,11 +14,15 @@
   canvas {
     margin: 0px;
   }
+  button {
+    font-size: 4em;
+  }
 </style>
 <script>
 window.onload = function (){
   
   window.addEventListener('keydown', function (){
+    //does not allow the snake to move backwards or twice per interval
     if (event.key == 'ArrowUp' && dir != 'down' && canMove){
       canMove = false;
       dir = 'up';
@@ -47,11 +52,50 @@ window.onload = function (){
   }, 100);
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
-  canvas.width = canvas.height = 600;
-  
+  canvas.width = 600;
+  canvas.height = 850;
   document.body.appendChild(canvas);
+  //draws the keys
+  ctx.beginPath();
+  ctx.font = "135px Arial";
+  ctx.strokeRect(250, 650, 100, 100);
+  ctx.fillText('U', 250, 750);
+  ctx.strokeRect(150, 700, 100, 100);
+  ctx.fillText('L', 150, 800);
+  ctx.strokeRect(350, 700, 100, 100);
+  ctx.fillText('R', 350, 800);
+  ctx.strokeRect(250, 750, 100, 100);
+  ctx.fillText('D', 250, 850);
+  ctx.closePath();
+  //add onclick event for movement on devices without physical keyboard
+  canvas.addEventListener('mousedown', function (){
+    if (event.clientX > 250 && event.clientX < 350 && event.clientY > 650 && event.clientY < 750 && dir != 'down' && canMove){
+      canMove = false;
+      dir = 'up';
+	  moveX = 0;
+      moveY = -1;
+    }
+    if (event.clientX > 150 && event.clientX < 250 && event.clientY > 700 && event.clientY < 800 && dir != 'right' && canMove){
+      canMove = false;
+      dir = 'left';
+	  moveX = -1;
+      moveY = 0;
+    }
+    if (event.clientX > 350 && event.clientX < 450 && event.clientY > 700 && event.clientY < 800 && dir != 'left' && canMove){
+      canMove = false;
+      dir = 'right';
+	  moveX = 1;
+      moveY = 0;
+    }
+    if (event.clientX > 250 && event.clientX < 350 && event.clientY > 750 && event.clientY < 850 && dir != 'up' && canMove){
+      canMove = false;
+      dir = 'down';
+	  moveX = 0;
+      moveY = 1;
+    }
+  });
+  
   var canMove = true;
-  var apple = false;
   var dir = 'up';
   var moveX = 0;
   var moveY = -1;
