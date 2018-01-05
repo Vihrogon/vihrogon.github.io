@@ -21,28 +21,58 @@
         //sets the size of the canvas to be the smaller between width and height and a multiple of the box size
         //var size = (width < height) ? (width - width % box) / box : (height - height % box) / box;
         var size = 40;
-        var moves = ['up'];
-        var snake = [{x: 10, y: 10}, {x: 10, y: 11}, {x: 10, y: 12}, {x: 10, y: 13}];
-        var apple = {x: 9, y: 10};
-        var speed = 4;
+        var moves = [];
+        var snake = [];
+        var apple = {};
+        var speed = 0;
         var highscore = 0;
         var gameover = false;
-        //
-        var time = window.setInterval(function (){
-          move();
-          draw();
-          score();
-        },1000 / speed);
+        var time;
         canvas.width = size * box;
         canvas.height = size * box + size * box / 2;
         document.body.appendChild(canvas);
         
-        window.addEventListener('keydown', function (){
-          test(event.key);console.log(event.key)
+        var thumbstick = {x: size * box / 2, y: size * box + size * box / 4};
+        //var thumbDefault = {x: size * box / 2, y: size * box + size * box / 4};
+        var x = 0;
+        var y = 0;
+        var thumb = false;
+        //console.log(navigator.getBattery());
+        
+        
+        //
+        window.addEventListener('pointerdown', function (){
+          ctx.arc(thumbstick.x, thumbstick.y, size * box / 8, 0, Math.PI * 2);
+          if (ctx.isPointInPath(event.x, event.y)){
+            x = size * box / 2 - event.layerX;
+            y = size * box + size * box / 4 - event.layerY;
+            thumb = true;
+          }
         });
         //
-        function test (key){
-          //if (key == )
+        window.addEventListener('pointermove', function (){
+          if (thumb){
+            thumbstick.x = event.layerX + x;
+            thumbstick.y = event.layerY + y;
+            draw();
+          }
+        });
+        //
+        window.addEventListener('pointerup', function (){
+          thumbstick.x = size * box / 2;
+          thumbstick.y = size * box + size * box / 4;
+          thumb = false;
+          draw();
+        });
+        //
+        window.addEventListener('keydown', function (){
+          keyboard(event.key);
+        });
+        //
+        function keyboard (key){
+          if (gameover && key == ' '){
+            newGame();
+          }
           if (moves[moves.length - 1] != 'up' && moves[moves.length - 1] != 'down'){
             if (key == 'ArrowUp')
               moves.push('up')
@@ -56,7 +86,24 @@
               moves.push('right')
           }
         }
-         //
+        
+        //
+        function newGame(){
+          let center = Math.floor(size / 2)
+          snake = [{x: center, y: center}, {x: center, y: center + 1}, {x: center, y: center + 2}, {x: center, y: center + 3}];
+          speed = 4;
+          gameover = false;
+          apple = {x: rr(1, size - 2), y: rr(1, size - 2)};
+          moves = ['up'];
+          highscore = 0;
+          clearInterval(time);
+          time = window.setInterval(function (){
+            move();
+            draw();
+            score();
+          },1000 / speed);
+        }
+        //
         function score(){
           if (localStorage.highscore){
             if (localStorage.highscore < highscore){
@@ -118,7 +165,7 @@
             apple.y = rr(1, size - 2);
             //score and speed
             highscore += 10 * speed;
-            speed += 0.5;console.log(speed);
+            speed += 0.5;
             clearInterval(time);
             time = window.setInterval(function (){
               move();
@@ -133,85 +180,66 @@
           }
         }
         //
+        function drawShape(shape, type, style, x, y, a1, a2){
+          ctx.beginPath();
+          
+          if (shape == 'rect'){
+            ctx.rect(x, y, a1, a2);
+          }
+          
+          if (shape == 'arc'){
+            ctx.arc(x, y, a1, 0, Math.PI * 2);
+          }
+          
+          if (shape == 'text'){
+            ctx.fillStyle = style;
+            ctx.font = a2;
+            ctx.fillText(a1, x, y);
+          }
+          
+          if (type == 'fill'){
+            ctx.fillStyle = style;
+            ctx.fill();
+          }
+          
+          if (type == 'stroke'){
+            ctx.strokeStyle = style;
+            ctx.stroke();
+          }
+          
+          ctx.closePath();
+        }
+        //
         function draw(){
           //background
-          ctx.beginPath();
-          ctx.rect(0, 0, size * box, size * box + size * box / 2);
-          ctx.fillStyle = 'black';
-          ctx.fill();
-          ctx.closePath();
+          drawShape('rect', 'fill', 'black', 0, 0, size * box, size * box + size * box / 2);
           //border
-          ctx.beginPath();
-          ctx.rect(box, box, size * box - box * 2, size * box - box * 2);
-          ctx.strokeStyle = 'white';
-          ctx.stroke();
-          ctx.closePath();
+          drawShape('rect', 'stroke', 'white', box, box, size * box - box * 2, size * box - box * 2);
           //apple
-          ctx.beginPath();
-          ctx.rect(box * apple.x + 1, box * apple.y + 1, box - 2, box - 2);
-          ctx.fillStyle = 'red';
-          ctx.fill();
-          ctx.closePath();
+          drawShape('rect', 'fill', 'red', box * apple.x + 1, box * apple.y + 1, box - 2, box - 2);
           //snake
           for (let n = 0; n < snake.length; n++){
-            ctx.beginPath();
-            ctx.rect(box * snake[n].x + 1, box * snake[n].y + 1, box - 2, box - 2);
-            ctx.fillStyle = 'green';
-            ctx.fill();
-            ctx.closePath();
+            drawShape('rect', 'fill', 'green', box * snake[n].x + 1, box * snake[n].y + 1, box - 2, box - 2);
           }
           //gameover
           if (gameover){
-            ctx.beginPath();
-            ctx.font = box * 2 + 'px courier';
-            ctx.fillStyle = 'red';
-            ctx.fillText('GAME OVER', box * size / 2 - box * 5, size * box / 2);
-            ctx.closePath();
+            drawShape('text', 'fill', 'red', box * size / 2 - box * 5, size * box / 2, 'GAME OVER', box * 2 + 'px courier');
+            drawShape('text', 'fill', 'orange', box * size / 2 - box * 4, size * box / 2 + box, 'press spacebar', box + 'px courier');
           }
           //score
-          ctx.beginPath();
-          ctx.font = box + 'px courier';
-          ctx.fillStyle = 'orange';
-          ctx.fillText('your score : ' + highscore, box, size * box + box);
-          ctx.closePath();
+          drawShape('text', 'fill', 'orange', box, size * box + box, 'your score : ' + highscore, box + 'px courier');
           //highscore
-           ctx.beginPath();
-          ctx.font = box + 'px courier';
-          ctx.fillStyle = 'orange';
-          ctx.fillText('high score : ' + localStorage.highscore, box, size * box + box * 2);
-          ctx.closePath();
+          drawShape('text', 'fill', 'orange', box, size * box + box * 2, 'high score : ' + localStorage.highscore, box + 'px courier');
           //control
-          ctx.beginPath();
-          ctx.arc(size * box / 2, size * box + size * box / 4, size * box / 5, 0, 2 * Math.PI);
-          ctx.fillStyle = '#eee';
-          ctx.fill();
-          ctx.closePath();
+          drawShape('arc', 'fill', '#eee', size * box / 2, size * box + size * box / 4, size * box / 5);
           
-          ctx.beginPath();
-          ctx.arc(size * box / 2, size * box + size * box / 4, size * box / 8, 0, 2 * Math.PI);
-          ctx.fillStyle = '#777';
-          ctx.fill();
-          ctx.closePath();
+          drawShape('arc', 'fill', '#777', thumbstick.x, thumbstick.y, size * box / 8);
           
-          ctx.beginPath();
-          ctx.arc(size * box / 2, size * box + size * box / 4, size * box / 16, 0, 2 * Math.PI);
-          ctx.fillStyle = '#555';
-          ctx.fill();
-          ctx.closePath();
+          drawShape('arc', 'fill', '#555', thumbstick.x, thumbstick.y, size * box / 16);
           
-          ctx.beginPath();
-          ctx.arc(size * box / 2, size * box + size * box / 4, size * box / 8, 0, 2 * Math.PI);
-          ctx.strokeStyle = '#444';
-          ctx.lineWidth = 2;
-          ctx.stroke();
-          ctx.closePath();
+          drawShape('arc', 'stroke', '#444', thumbstick.x, thumbstick.y, size * box / 8);
           
-          ctx.beginPath();
-          ctx.arc(size * box / 2, size * box + size * box / 4, size * box / 16, 0, 2 * Math.PI);
-          ctx.strokeStyle = '#444';
-          ctx.lineWidth = 2;
-          ctx.stroke();
-          ctx.closePath();
+          drawShape('arc', 'stroke', '#444', thumbstick.x, thumbstick.y, size * box / 16);
         }
         //returns a random number in the range of and including n1 and n2 and (if given) excluding n3
         function rr(n1, n2, n3){
@@ -223,8 +251,9 @@
           }
         }
         
-        draw();
+        newGame();
         score();
+        draw();
       });
     </script>
   </head>
