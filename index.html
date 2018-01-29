@@ -11,8 +11,8 @@
       }
     </style>
     <script>
+    //Writen by Yordan Yordanov: yordanior@gmail.com
       window.addEventListener('load', function() {
-
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         var width = window.innerWidth;
@@ -20,6 +20,7 @@
         var box = 12;
         //sets the size of the canvas to be the smaller between width and height and a multiple of the box size
         //var size = (width < height) ? (width - width % box) / box : (height - height % box) / box;
+        //sets a static size
         var size = 40;
         var moves = [];
         var snake = [];
@@ -29,20 +30,18 @@
         var gameover = false;
         var time;
         var drag = false;
-        var center = {
-          x: size * box / 2,
-          y: size * box + size * box / 4
-        };
+        var p = Math.PI
+        var p4 = Math.PI / 4
+        var cx = size * box / 2
+        var cy = size * box + size * box / 4;
         canvas.width = size * box;
         canvas.height = size * box + size * box / 2;
         document.body.appendChild(canvas);
-
         {
           let p = Math.PI
             , p4 = Math.PI / 4
             , cx = size * box / 2
             , cy = size * box + size * box / 4;
-
           function dir(x, y, p1, p2) {
             ctx.beginPath();
             ctx.moveTo(cx, cy);
@@ -50,10 +49,7 @@
             ctx.closePath();
             return ctx.isPointInPath(x, y);
           }
-
-          //
           window.addEventListener('pointerdown', function() {
-
             if (dir(event.x, event.y, p + p4, p * 2 - p4)) {
               keyboard('ArrowUp');
             }
@@ -67,11 +63,8 @@
               keyboard('ArrowLeft');
             }
             drag = true
-
           });
-          //
           window.addEventListener('pointermove', function() {
-
             if (drag) {
               if (dir(event.x, event.y, p + p4, p * 2 - p4)) {
                 keyboard('ArrowUp');
@@ -87,18 +80,13 @@
               }
             }
           });
-          //
           window.addEventListener('pointerup', function() {
             drag = false;
           });
-          //
           window.addEventListener('keydown', function() {
             keyboard(event.key);
           });
-
         }
-
-        //
         function keyboard(key) {
           if (gameover && key == ' ') {
             newGame();
@@ -116,8 +104,6 @@
               moves.push('right')
           }
         }
-
-        //
         function newGame() {
           let center = Math.floor(size / 2)
           snake = [{
@@ -135,10 +121,7 @@
           }];
           speed = 4;
           gameover = false;
-          apple = {
-            x: rr(1, size - 2),
-            y: rr(1, size - 2)
-          };
+          apple = position(1, size - 2);
           moves = ['up'];
           highscore = 0;
           clearInterval(time);
@@ -148,7 +131,6 @@
             score();
           }, 1000 / speed);
         }
-        //
         function score() {
           if (localStorage.highscore) {
             if (localStorage.highscore < highscore) {
@@ -158,7 +140,6 @@
             localStorage.highscore = 0;
           }
         }
-        //
         function move() {
           let x = 0;
           let y = 0;
@@ -212,8 +193,7 @@
               x: apple.x,
               y: apple.y
             });
-            apple.x = rr(1, size - 2);
-            apple.y = rr(1, size - 2);
+            apple = position(1, size - 2);
             //score and speed
             highscore += 10 * speed;
             speed += 0.5;
@@ -224,49 +204,46 @@
               score();
             }, 1000 / speed);
           }
-
-          //
+          //if it is the last move keep it as a reference for the next one
           if (moves.length > 1) {
             moves.shift();
           }
         }
-        //
         function drawShape(shape, type, style, x, y, a1, a2) {
           ctx.beginPath();
-
           if (shape == 'rect') {
             ctx.rect(x, y, a1, a2);
           }
-
           if (shape == 'arc') {
             ctx.arc(x, y, a1, 0, Math.PI * 2);
           }
-
           if (shape == 'text') {
             ctx.fillStyle = style;
             ctx.font = a2;
             ctx.fillText(a1, x, y);
           }
-
           if (type == 'fill') {
             ctx.fillStyle = style;
             ctx.fill();
           }
-
           if (type == 'stroke') {
             ctx.strokeStyle = style;
             ctx.stroke();
           }
-
           ctx.closePath();
+          if (shape == 'control'){
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.arc(cx, cy, size * box / 5, type, style);
+            ctx.closePath();
+            ctx.fillStyle = 'white';
+            ctx.fill();
+            ctx.strokeStyle = 'green';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+          }
         }
-        //
         function draw() {
-
-          let p = Math.PI
-            , p4 = Math.PI / 4
-            , cx = size * box / 2
-            , cy = size * box + size * box / 4;
           //background
           drawShape('rect', 'fill', 'black', 0, 0, size * box, size * box + cx);
           //border
@@ -287,71 +264,25 @@
           //highscore
           drawShape('text', 'fill', 'orange', box, size * box + box * 2, 'high score : ' + localStorage.highscore, box + 'px courier');
           //control
-          //drawShape('arc', 'fill', '#eee', size * box / 2, size * box + size * box / 4, size * box / 5);
-
           //draws the UP control
-          ctx.beginPath();
-          ctx.moveTo(cx, cy);
-          ctx.arc(cx, cy, size * box / 5, p + p4, p * 2 - p4);
-          ctx.closePath();
-
-          ctx.fillStyle = 'white';
-          ctx.fill();
-
-          ctx.strokeStyle = 'green';
-          ctx.lineWidth = 4;
-          ctx.stroke();
-
+          drawShape('control', p + p4, p * 2 - p4);
           //draws the RIGHT control
-          ctx.beginPath();
-          ctx.moveTo(cx, cy);
-          ctx.arc(cx, cy, size * box / 5, p * 2 - p4, p * 2 + p4);
-          ctx.closePath();
-
-          ctx.fillStyle = 'white';
-          ctx.fill();
-
-          ctx.strokeStyle = 'green';
-          ctx.lineWidth = 4;
-          ctx.stroke();
-
+          drawShape('control', p * 2 - p4, p * 2 + p4);
           //draws the DOWN control
-          ctx.beginPath();
-          ctx.moveTo(cx, cy);
-          ctx.arc(cx, cy, size * box / 5, p * 2 + p4, p - p4);
-          ctx.closePath();
-
-          ctx.fillStyle = 'white';
-          ctx.fill();
-
-          ctx.strokeStyle = 'green';
-          ctx.lineWidth = 4;
-          ctx.stroke();
-
+          drawShape('control', p * 2 + p4, p - p4);
           //draws the LEFT control
-          ctx.beginPath();
-          ctx.moveTo(cx, cy);
-          ctx.arc(cx, cy, size * box / 5, p - p4, p + p4);
-          ctx.closePath();
-
-          ctx.fillStyle = 'white';
-          ctx.fill();
-
-          ctx.strokeStyle = 'green';
-          ctx.lineWidth = 4;
-          ctx.stroke();
-
+          drawShape('control', p - p4, p + p4);
         }
-        //returns a random number in the range of and including n1 and n2 and (if given) excluding n3
-        function rr(n1, n2, n3) {
-          var num = Math.floor(Math.random() * (n2 - n1 + 1) + n1);
-          if (arguments.length == 3 && num == n3) {
-            return this.rr(n1, n2, n3);
-          } else {
-            return num;
+        //returns an {x, y} position that is not occupied by the snake
+        function position(n1, n2){
+          var x = Math.floor(Math.random() * (n2 - n1 + 1) + n1)
+          var y = Math.floor(Math.random() * (n2 - n1 + 1) + n1)
+          for (let i = 0; i < snake.length; i++){
+            if (snake[i].x == x && snake[i].y == y)
+              return position(n1, n2)
           }
+          return {x, y}
         }
-
         newGame();
         score();
         draw();
