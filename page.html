@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Books For All</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+      * {
+        white-space: nowrap;
+      }
+      a:link, a:visited, a:hover, a:active {
+        text-decoration: none;
+      }
+      h1, h2, h3, h4 {
+        margin: 0px;
+      }
+      body {
+        margin: 0px;
+        display: grid;
+        grid-template-areas:
+        'header header header'
+        'main main main'
+        '. section .'
+        '. banner .'
+        'footer footer footer';
+      }
+      header {
+        background-color: #eee;
+        grid-area: header;
+        display: grid;
+        grid-template-areas:
+        'logo nav1'
+        'logo nav2';
+        grid-template-columns: auto auto;
+        justify-content: space-between;
+        padding: 10px 30px;
+      }
+      header .logo {
+        grid-area: logo;
+      }
+      header .logo div {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #654;
+        font-size: 3em;
+      }
+      header nav ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 10px 0px;
+        overflow: hidden;
+      }
+      header nav ul a{
+        margin: 0px 10px;
+        color: #555;
+        font-size: .8em;
+      }
+      header .nav1 {
+        grid-area: nav1;
+      }
+      header .nav1 ul {
+        display: grid;
+        grid-template-columns: auto auto auto auto auto auto;
+        justify-content: space-between;
+        border-bottom: 1px solid #bbb;
+      }
+      header .nav2 {
+        grid-area: nav2;
+      }
+      header .nav2 ul {
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+        justify-content: space-between;
+      }
+      main {
+        grid-area: main;
+        height: 730px;
+        background-image: url('images/library.jpeg');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: auto 730px;
+        text-align: center;
+        color: #eee;
+      }
+      main input::placeholder {
+        color: #eee;
+      }
+      main a {
+        color: #eee;
+      }
+      main button {
+        border: none;
+        font-size: 1.2em;
+        padding: 12px 25px;
+        margin: 0px;
+        color: white;
+        position: relative;
+      }
+      main  select, input {
+        margin: 0px 10px;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0);
+        color: #eee;
+        font-size: 1.2em;
+        border: 1px solid #eee;
+      }
+      main h1:first-child {
+        padding-top: 100px;
+      }
+      main h3 {
+        padding: 20px 0px;
+      }
+      main form {
+        padding: 130px 0px;
+      }
+      main .bottom {
+        position: relative;
+        margin-top: 91px;
+        padding: 40px 0px;
+        background-color: rgba(210, 105, 30, .5);
+      }
+      main .bottom a {
+        font-size: .8em;
+        padding: 0px 10px;
+      }
+      main .bottom span {
+        position: absolute;
+        right: 10%;
+        bottom: 20%;
+      }
+      main .dark {
+        margin: 0px;
+        background-color: rgba(0, 0, 0, .5);
+        height: 100%;
+      }
+      section {
+        grid-area: section;
+        width: 1178px;
+        position: relative;
+      }
+      section hr {
+        margin: 50px 0px;
+      }
+      section h3 {
+        color: #654;
+        background: white;
+        padding: 0px 10px;
+        position: absolute;
+        top: 3%;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      section article {
+        padding: 10px 120px;
+        font-size: 1.3em;
+        white-space: normal;
+        text-align: center;
+        color: #666;
+      }
+      section .rating {
+        padding: 30px 0px;
+      }
+      section address {
+        padding: 20px 0px;
+        border-bottom : 1px solid #999;
+        border-top: 1px solid #999;
+        color: #666;
+        display: grid;
+        grid-template-columns: auto auto auto;
+        justify-content: space-between;
+      }
+      section address span * {
+        margin: 0px 10px;
+      }
+      section address i {
+        color: chocolate;
+      }
+      section .gallery{
+        padding: 50px 0px 20px 0px;
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+        grid-template-rows: auto auto;
+        grid-gap: 20px;
+        border-bottom: 1px solid #999;
+      }
+      section .gallery img {
+        width: 100%;
+        height: 98%;
+        object-fit: fill;
+      }
+      section .gallery .img1 {
+        grid-row: 1 / span 2;
+        grid-column: 1 / span 2;
+      }
+      section .gallery .img2 {
+        grid-row: 1 / span 1;
+        grid-column: 3 / span 1;
+      }
+      section .gallery .img3 {
+        grid-row: 1 / span 1;
+        grid-column: 4 / span 1;
+      }
+      section .gallery .img4 {
+        grid-row: 2 / span 1;
+        grid-column: 3 / span 1;
+      }
+      section .gallery .img5 {
+        grid-row: 2 / span 1;
+        grid-column: 4 / span 1;
+      }
+      section .gallery .bookmark {
+        color: #a65;
+        font-weight: bold;
+      }
+      section .gallery .bookmark i {
+        padding-left: 20px;
+        color: gray;
+      }
+      section .reviews ul {
+        list-style-type: none;
+        margin: 0px;
+        padding: 0px:
+      }
+      section .reviews li {
+        margin: 0px;
+        display: inline-block;
+        list-style: none;
+      }
+      section .border {
+        border: 1px solid #aaa;
+      }
+      section .comment p {
+        white-space: normal;
+      }
+      .banner {
+        grid-area: banner;
+      }
+      footer {
+        grid-area: footer;
+        display: grid;
+        grid-template-columns: auto auto;
+        justify-content: space-between;
+        background-color: #333;
+        color: #eee;
+        padding: 20px 0px;;
+      }
+      footer .nav3{
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+        justify-content: space-evenly;
+      }
+      footer ul {
+        list-style-position: inside;
+      }
+      footer li {
+        margin: 10px 0px;
+        padding: 0px 10px;
+        list-style: none;
+      }
+      footer li:before {
+        content:'\25A0';
+        display: block;
+        position: relative;
+        max-width: 0;
+        max-height: 0;
+        left: -8px;
+        top: 5px;
+        color: orange;
+        font-size: 6px;
+      }
+      footer a {
+        color: #888;
+      }
+      footer i {
+        padding: 7px 5px;
+      }
+      footer div {
+        color: #eee;
+      }
+      @media (max-width: 1178) {
+        .grid-container {
+          grid-template-areas:
+            'header header header header header header'
+            'footer footer footer footer footer footer';
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo"><div><i class="fa fa-book"></i>&nbsp;LOREM</div></div>
+      <nav class="nav1">
+        <ul>
+          <li><a href="">Rewards</a></li>
+          <li><a href="">Sell Books</a></li>
+          <li><a href="">My Account</a></li>
+          <li><a href="">Help</a></li>
+          <li><a href=""><i class="fa fa-search"></i></a></li>
+          <li><a href=""><i class="fa fa-shopping-cart"></i>&nbsp;CART(5)&nbsp;<i class="fa fa-angle-down"></i></a></li>
+        </ul>
+      </nav>
+      <nav class="nav2">
+        <ul>
+          <li><a href="">MARKETPLACE</a></li>
+          <li><a href="">SEND A BOOK</a></li>
+          <li><a href="">BUSINESS LISTINGS</a></li>
+          <li><a href="">MAGAZINE</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <div class="dark">
+        <h1>Experience Lorem, Connecting You To Businesses</h1>
+        <h3>Unique, original books from our Ipsum authors.</h3>
+        <form>
+          <input type="text" placeholder="Search..">
+          <select>
+            <option>Choose location</option>
+          </select>
+          <select>
+            <option>Choose category</option>
+          </select>
+          <button style="background: chocolate;left: 4px;">SEARCH</button>
+          <button style="background: #654;">Advanced</button>
+        </form>
+        <div class="bottom">
+          <nav>
+            <a href="">Home</a>/
+            <a href="">Directory</a>/
+            <a href="">The Library</a>
+          </nav>
+          <h1>
+            The Dolor Library
+            <span class="fa-stack">
+              <i class="fa fa-circle-thin fa-stack-2x"></i>
+              <i class="fa fa-flag fa-stack fa-1x"></i>
+            </span>
+          </h1>
+        </div>
+      </div>
+    </main>
+    <section>
+      <hr>
+      <h3>
+        <span class="fa-stack">
+          <i class="fa fa-exclamation-circle fa-stack-1x" style="color: chocolate;"></i>
+          <i class="fa fa-circle-o fa-stack-2x"></i>
+        </span>
+        FEATURED
+      </h3>
+      <article>
+        Among the most elegant of establishments in Sit Amet, the library offers a plethora of books and ganres. Visitors also have at their disposal a coffee and sandwich bar and and a copy corner.
+      <div class="rating">
+        <i class="fa fa-star" style="color: orange;"></i>
+        <i class="fa fa-star" style="color: orange;"></i>
+        <i class="fa fa-star" style="color: orange;"></i>
+        <i class="fa fa-star" style="color: orange;"></i>
+        <i class="fa fa-star" style="color: gray;"></i>
+        &nbsp;&nbsp;(45 REVIEWS)
+      </div>
+      </article>
+      <address>
+        <span>
+          <i class="fa fa-map-marker"></i>Consectetur, AA 10 ave. Sit Amet, Ipsum
+          <i class="fa fa-phone"></i>+1234567890
+          <i class="fa fa-envelope-o"></i>hello@lorem.com
+        </span>
+        <span>
+          <i class="fa fa-folder-o"></i>
+          <b style="color: #654;">LIBRARIES</b>
+        </span>
+        <span>
+          <i class="fa fa-facebook"></i>
+          <i class="fa fa-twitter"></i>
+          <i class="fa fa-instagram"></i>
+        </span>
+      </address>
+      <div class="gallery">
+        <div class="img1"><img alt="book" src="images/book.jpeg"></div>
+        <div class="img2"><img alt="book" src="images/book.jpeg"></div>
+        <div class="img3"><img alt="book" src="images/book.jpeg"></div>
+        <div class="img4"><img alt="book" src="images/book.jpeg"></div>
+        <div class="img5"><img alt="book" src="images/book.jpeg"></div>
+        <div class="bookmark">
+          <i class="fa fa-bookmark"></i>&nbsp;BOOKMARK
+          <i class="fa fa-share-alt"></i>&nbsp;SHARE
+          <i class="fa fa-check" style="color: orange;"></i>&nbsp;<span style="color: orange;">CLAIM THIS LISTING</span>
+        </div>
+      </div>
+      <div class="reviews">
+        <ul>
+          <li>REVIEWS(2)</li>
+          <li>PHOTOS(1)</li>
+          <li>MAP</li>
+          <li>RELATED LISTINGS</li>
+          <li>NEARBY LISTINGS</li>
+        </ul>
+        <div class="border">
+          <select>
+            <option>Sort by: Helpfulness</option>
+          </select>
+          <div class="comment">
+            <div>
+              <span>John Doe</span>
+              <span>
+                <i class="fa fa-star" style="color: orange;"></i>
+                <i class="fa fa-star" style="color: orange;"></i>
+                <i class="fa fa-star" style="color: orange;"></i>
+                <i class="fa fa-star" style="color: orange;"></i>
+                <i class="fa fa-star" style="color: gray;"></i>
+              </span>
+              <span>
+                <i class="fa fa-clock-o"></i>Reviewed 2 monts ago.
+              </span>
+              <span>
+                <i class="fa fa-pencil"></i>Last edited 2 monts ago.
+              </span>
+              <span>
+                Was this review helpful to you?
+                <i class="fa fa-thumbs-up"></i>
+                <i class="fa fa-thumbs-down"></i>
+                (12)
+              </span>
+            </div>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+          </div>
+          <div class="comment">
+            <div>
+              <span>John Doe</span>
+              <span>
+                 <i class="fa fa-star" style="color: orange;"></i>
+                 <i class="fa fa-star" style="color: orange;"></i>
+                 <i class="fa fa-star" style="color: orange;"></i>
+                 <i class="fa fa-star" style="color: orange;"></i>
+                 <i class="fa fa-star" style="color: gray;"></i>
+              </span>
+              <span>
+                <i class="fa fa-clock-o"></i>Reviewed 2 monts ago.
+              </span>
+              <span>
+                <i class="fa fa-pencil"></i>Last edited 2 monts ago.
+              </span>
+              <span>
+                Was this review helpful to you?
+                <i class="fa fa-thumbs-up"></i>
+                <i class="fa fa-thumbs-down"></i>
+                (12)
+              </span>
+            </div>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+          </div>
+          <i class="fa fa-comment"></i>ADD A COMMENT
+        </div>
+      </div>
+    </section>
+    <div class="banner">banner add</div>
+    <footer>
+      <nav class="nav3">
+        <ul>
+          <div>CUSTOMERS</div>
+          <li><a href="">My Reward</a></li>
+          <li><a href="">Locate Businesses</a></li>
+          <li><a href="">Marketplace</a></li>
+          <li><a href="">Meet The Artisans</a></li>
+          <li><a href="">Send A Card</a></li>
+          <li><a href="">Magazine</a></li>
+          <li><a href="">Become A Member</a></li>
+        </ul>
+        <ul>
+          <div>OPPORTUNITIES</div>
+          <li><a href="">Content Marketing Services</a></li>
+          <li><a href="">Advertise With Us</a></li>
+          <li><a href="">Sell With Us</a></li>
+          <li><a href="">Work With Us</a></li>
+          <li><a href="">Add Your Business</a></li>
+          <li><a href="">Manage Your Listing</a></li>
+          <li><a href="">Investors</a></li>
+        </ul>
+        <ul>
+          <div>GET TO KNOW US</div>
+          <li><a href="">About Lorem</a></li>
+          <li><a href="">Privacy Policy</a></li>
+          <li><a href="">Terms & Conditions</a></li>
+          <li><a href="">Contact Us</a></li>
+        </ul>
+        <ul>
+          <div>ON SOCIAL MEDIA</div>
+          <div>
+            <i class="fa fa-facebook"></i>
+            <i class="fa fa-twitter"></i>
+            <i class="fa fa-instagram"></i>
+          </div>
+        </ul>
+      </nav>
+      <div style="text-align: right;padding: 15px;">
+        <a href="">&#169 Copyright 2018 Lorem Inc. All Rights Reserved
+        <br>
+        SECURED PAYMENTS BY
+        <img width="75px" src="images/paypal.png">
+        </a>
+      </div>
+    </footer>
+  </body>
+</html>
