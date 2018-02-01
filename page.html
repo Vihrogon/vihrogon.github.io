@@ -8,6 +8,7 @@
     <style>
       * {
         white-space: nowrap;
+        font-family: "Verdana", Arial, serif;
       }
       a:link, a:visited, a:hover, a:active {
         text-decoration: none;
@@ -84,6 +85,15 @@
         text-align: center;
         color: #eee;
       }
+      main .dark {
+        display: grid;
+        grid-template-rows: auto auto auto;
+        align-content: end;
+        margin: 0px;
+        padding: 0px;
+        background-color: rgba(0, 0, 0, .5);
+        height: 100%;
+      }
       main input::placeholder {
         color: #eee;
       }
@@ -92,6 +102,7 @@
       }
       main button {
         border: none;
+        width: 150px;
         font-size: 1.2em;
         padding: 12px 25px;
         margin: 0px;
@@ -106,34 +117,30 @@
         font-size: 1.2em;
         border: 1px solid #eee;
       }
-      main h1:first-child {
-        padding-top: 100px;
-      }
       main h3 {
         padding: 20px 0px;
+        margin-bottom: 100px;
       }
       main form {
-        padding: 130px 0px;
+        margin-bottom: 200px;
       }
       main .bottom {
         position: relative;
-        margin-top: 91px;
         padding: 40px 0px;
         background-color: rgba(210, 105, 30, .5);
       }
       main .bottom a {
         font-size: .8em;
-        padding: 0px 10px;
+        padding: 10px;
+      }
+      main .bottom h1 {
       }
       main .bottom span {
         position: absolute;
-        right: 10%;
-        bottom: 20%;
-      }
-      main .dark {
-        margin: 0px;
-        background-color: rgba(0, 0, 0, .5);
-        height: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 80%;
+        //bottom: 20%;
       }
       section {
         grid-area: section;
@@ -148,12 +155,12 @@
         background: white;
         padding: 0px 10px;
         position: absolute;
-        top: 3%;
+        top: 2.5%;
         left: 50%;
         transform: translateX(-50%);
       }
       section article {
-        padding: 10px 120px;
+        padding: 10px 80px;
         font-size: 1.3em;
         white-space: normal;
         text-align: center;
@@ -218,24 +225,77 @@
         padding-left: 20px;
         color: gray;
       }
-      section .reviews ul {
-        list-style-type: none;
-        margin: 0px;
-        padding: 0px:
+      section .reviews nav {
+        display: grid;
+        grid-template-columns: auto auto auto auto auto;
+        justify-content: start;
+        margin-top: 30px;
       }
-      section .reviews li {
-        margin: 0px;
-        display: inline-block;
-        list-style: none;
+      section .reviews nav div {
+        padding: 20px;
+        color: #a65;
+        font-weight: bold;
+      }
+      section .reviews nav .selected {
+        font-size: 1.1em;
+        border: 1px solid #aaa;
+        border-bottom-width: 0px;
+        color: black;
+        background: white;
+        position: relative;
+        top: 1px;
       }
       section .border {
         border: 1px solid #aaa;
+        padding: 25px 25px 50px;
+      }
+      section select {
+        padding: 10px;
+        font-size: 1.09em;
+      }
+      section .comment {
+        border-bottom: 1px solid #aaa;
+        display: grid;
+        grid-template-columns: auto auto;
+        justify-content: space-between;
+      }
+      section .comment div {
+        width: 100%;
+        border-bottom: 1px dashed #aaa;
+        padding: 20px 0px;
+        font-size: .8em;
+        color: gray;
+      }
+      section .comment div span {
+        padding: 0px 10px;
+      }
+      section .comment div .name:first-child {
+        font-size: .9em;
+        padding: 0px 10px 0px 0px;
+        color: #a65;
+        font-weight: bold;
+      }
+      section .comment div:nth-child(2) {
+        text-align: right;
       }
       section .comment p {
         white-space: normal;
+        color: #666;
+        grid-column: 1 / span 2;
+      }
+      section .addbut {
+        position: relative;
+        top: 25px;
+        color: #a65;
+        font-weight: bold;
       }
       .banner {
+        text-align: center;
+        padding: 140px;
+        color: white;
         grid-area: banner;
+        margin: 30px 0px;
+        background: chocolate;
       }
       footer {
         grid-area: footer;
@@ -260,7 +320,7 @@
         list-style: none;
       }
       footer li:before {
-        content:'\25A0';
+        content: '\25A0';
         display: block;
         position: relative;
         max-width: 0;
@@ -322,7 +382,7 @@
           <select>
             <option>Choose category</option>
           </select>
-          <button style="background: chocolate;left: 4px;">SEARCH</button>
+          <button style="background: chocolate;left: 6px;">SEARCH</button>
           <button style="background: #654;">Advanced</button>
         </form>
         <div class="bottom">
@@ -390,20 +450,20 @@
         </div>
       </div>
       <div class="reviews">
-        <ul>
-          <li>REVIEWS(2)</li>
-          <li>PHOTOS(1)</li>
-          <li>MAP</li>
-          <li>RELATED LISTINGS</li>
-          <li>NEARBY LISTINGS</li>
-        </ul>
+        <nav>
+          <div class="selected">REVIEWS(2)</div>
+          <div>PHOTOS(1)</div>
+          <div>MAP</div>
+          <div>RELATED LISTINGS</div>
+          <div>NEARBY LISTINGS</div>
+        </nav>
         <div class="border">
           <select>
-            <option>Sort by: Helpfulness</option>
+            <option><span style="color: gray;">Sort by:</span> Helpfulness</option>
           </select>
           <div class="comment">
             <div>
-              <span>John Doe</span>
+              <span class="name">John Doe</span>
               <span>
                 <i class="fa fa-star" style="color: orange;"></i>
                 <i class="fa fa-star" style="color: orange;"></i>
@@ -417,6 +477,8 @@
               <span>
                 <i class="fa fa-pencil"></i>Last edited 2 monts ago.
               </span>
+            </div>
+            <div>
               <span>
                 Was this review helpful to you?
                 <i class="fa fa-thumbs-up"></i>
@@ -430,7 +492,7 @@
           </div>
           <div class="comment">
             <div>
-              <span>John Doe</span>
+              <span class="name">John Doe</span>
               <span>
                  <i class="fa fa-star" style="color: orange;"></i>
                  <i class="fa fa-star" style="color: orange;"></i>
@@ -444,6 +506,8 @@
               <span>
                 <i class="fa fa-pencil"></i>Last edited 2 monts ago.
               </span>
+            </div>
+            <div>
               <span>
                 Was this review helpful to you?
                 <i class="fa fa-thumbs-up"></i>
@@ -455,7 +519,7 @@
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
             </p>
           </div>
-          <i class="fa fa-comment"></i>ADD A COMMENT
+          <span class="addbut"><i style="color: gray;" class="fa fa-comment"></i>&nbsp;ADD A COMMENT</span>
         </div>
       </div>
     </section>
@@ -498,12 +562,11 @@
           </div>
         </ul>
       </nav>
-      <div style="text-align: right;padding: 15px;">
-        <a href="">&#169 Copyright 2018 Lorem Inc. All Rights Reserved
+      <div style="text-align: right;padding: 15px;color: #888;">
+        &#169 Copyright 2018 Lorem Inc. All Rights Reserved
         <br>
         SECURED PAYMENTS BY
         <img width="75px" src="images/paypal.png">
-        </a>
       </div>
     </footer>
   </body>
