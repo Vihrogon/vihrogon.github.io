@@ -20,11 +20,11 @@
         margin: 0px;
         display: grid;
         grid-template-areas:
-        'header header header'
-        'main main main'
-        '. section .'
-        '. banner .'
-        'footer footer footer';
+          'header header header'
+          'main main main'
+          '. section .'
+          '. banner .'
+          'footer footer footer';
       }
       header {
         background-color: #eee;
@@ -33,7 +33,6 @@
         grid-template-areas:
         'logo nav1'
         'logo nav2';
-        grid-template-columns: auto auto;
         justify-content: space-between;
         padding: 10px 30px;
       }
@@ -100,7 +99,29 @@
       main a {
         color: #eee;
       }
-      main button {
+      main h3 {
+        padding: 20px 0px;
+        margin-bottom: 100px;
+      }
+      main form {
+        margin-bottom: 200px;
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+        justify-content: center;
+      }
+      main form select, input {
+        margin: 10px 10px;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0);
+        color: #eee;
+        font-size: 1.2em;
+        border: 1px solid #eee;
+      }
+      main form div {
+        display: inline-block;
+        margin: 10px 10px;
+      }
+      main form button {
         border: none;
         width: 150px;
         font-size: 1.2em;
@@ -108,21 +129,6 @@
         margin: 0px;
         color: white;
         position: relative;
-      }
-      main  select, input {
-        margin: 0px 10px;
-        padding: 10px;
-        background: rgba(0, 0, 0, 0);
-        color: #eee;
-        font-size: 1.2em;
-        border: 1px solid #eee;
-      }
-      main h3 {
-        padding: 20px 0px;
-        margin-bottom: 100px;
-      }
-      main form {
-        margin-bottom: 200px;
       }
       main .bottom {
         position: relative;
@@ -144,20 +150,18 @@
       }
       section {
         grid-area: section;
-        //width: 1178px;
         position: relative;
       }
-      section hr {
-        margin: 50px 0px;
+      section fieldset {
+        margin: 30px 0px;;
+        border: 1px solid #654;
+        border-width: 1px 0px 0px;
       }
-      section h3 {
+      section fieldset legend {
+        text-align: center;
+        font-size: 1.1em;
         color: #654;
-        background: white;
-        padding: 0px 10px;
-        position: absolute;
-        top: 2.5%;
-        left: 50%;
-        transform: translateX(-50%);
+        font-weight: bold;
       }
       section article {
         padding: 10px 80px;
@@ -187,8 +191,10 @@
       section .gallery{
         padding: 50px 0px 20px 0px;
         display: grid;
-        grid-template-columns: auto auto auto auto;
-        grid-template-rows: auto auto;
+        grid-template-areas:
+          'img1 img1 img2 img3'
+          'img1 img1 img4 img5'
+          'mark mark mark mark';
         grid-gap: 20px;
         border-bottom: 1px solid #999;
       }
@@ -198,26 +204,22 @@
         object-fit: fill;
       }
       section .gallery .img1 {
-        grid-row: 1 / span 2;
-        grid-column: 1 / span 2;
+        grid-area: img1;
       }
       section .gallery .img2 {
-        grid-row: 1 / span 1;
-        grid-column: 3 / span 1;
+        grid-area: img2;
       }
       section .gallery .img3 {
-        grid-row: 1 / span 1;
-        grid-column: 4 / span 1;
+        grid-area: img3;
       }
       section .gallery .img4 {
-        grid-row: 2 / span 1;
-        grid-column: 3 / span 1;
+        grid-area: img4;
       }
       section .gallery .img5 {
-        grid-row: 2 / span 1;
-        grid-column: 4 / span 1;
+        grid-area: img5;
       }
       section .gallery .bookmark {
+        grid- area: mark;
         color: #a65;
         font-weight: bold;
       }
@@ -339,11 +341,47 @@
       footer div {
         color: #eee;
       }
-      @media (max-width: 1178) {
-        .grid-container {
+      @media only screen and (max-width: 1350px) {
+        * {
+          white-space: normal;
+        }
+        header {
           grid-template-areas:
-            'header header header header header header'
-            'footer footer footer footer footer footer';
+            'logo'
+            'nav1'
+            'nav2';
+          justify-content: space-around;
+        }
+        header .logo {
+          text-align: center;
+        }
+        main h3 {
+          margin-bottom: 50px;
+        }
+        main form {
+          grid-template-columns: auto;
+          grid-template-rows: auto auto auto auto;
+          margin-bottom: 50px;
+        }
+        section .gallery{
+          grid-template-areas:
+            'img1'
+            'img2'
+            'img3'
+            'img4'
+            'img5'
+            'mark';
+          justify-content: center;
+        }
+        footer {
+          grid-template-columns: auto;
+          grid-template-rows: auto auto;
+          justify-content: center;
+        }
+        footer .nav3 {
+          grid-template-columns: auto;
+          grid-template-rows: auto auto auto auto;
+          justify-content: center;
         }
       }
     </style>
@@ -382,8 +420,10 @@
           <select>
             <option>Choose category</option>
           </select>
-          <button style="background: chocolate;left: 6px;">SEARCH</button>
-          <button style="background: #654;">Advanced</button>
+          <div>
+            <button style="background: chocolate;left: 6px;">SEARCH</button>
+            <button style="background: #654;">Advanced</button>
+          </div>
         </form>
         <div class="bottom">
           <nav>
@@ -402,14 +442,15 @@
       </div>
     </main>
     <section>
-      <hr>
-      <h3>
-        <span class="fa-stack">
-          <i class="fa fa-exclamation-circle fa-stack-1x" style="color: chocolate;"></i>
-          <i class="fa fa-circle-o fa-stack-2x"></i>
-        </span>
-        FEATURED
-      </h3>
+      <fieldset>
+        <legend>
+          <span class="fa-stack">
+            <i class="fa fa-exclamation-circle fa-stack-lg" style="color: chocolate;"></i>
+            <i class="fa fa-circle-o fa-stack-2x"></i>
+          </span>
+          FEATURED
+        </legend>
+      </fieldset>
       <article>
         Among the most elegant of establishments in Sit Amet, the library offers a plethora of books and ganres. Visitors also have at their disposal a coffee and sandwich bar and and a copy corner.
       <div class="rating">
@@ -432,9 +473,9 @@
           <b style="color: #654;">LIBRARIES</b>
         </span>
         <span>
-          <i class="fa fa-facebook"></i>
-          <i class="fa fa-twitter"></i>
-          <i class="fa fa-instagram"></i>
+          <i style="color: #654;" class="fa fa-facebook"></i>
+          <i style="color: #654;" class="fa fa-twitter"></i>
+          <i style="color: #654;" class="fa fa-instagram"></i>
         </span>
       </address>
       <div class="gallery">
@@ -443,10 +484,10 @@
         <div class="img3"><img alt="book" src="images/book.jpeg"></div>
         <div class="img4"><img alt="book" src="images/book.jpeg"></div>
         <div class="img5"><img alt="book" src="images/book.jpeg"></div>
-        <div class="bookmark">
+        <div class="bookmark" style="white-space: nowrap;">
           <i class="fa fa-bookmark"></i>&nbsp;BOOKMARK
           <i class="fa fa-share-alt"></i>&nbsp;SHARE
-          <i class="fa fa-check" style="color: orange;"></i>&nbsp;<span style="color: orange;">CLAIM THIS LISTING</span>
+          <i class="fa fa-check" style="color: orange;"></i>&nbsp;<span style="color: orange;">CLAIM&nbsp;THIS&nbsp;LISTING</span>
         </div>
       </div>
       <div class="reviews">
