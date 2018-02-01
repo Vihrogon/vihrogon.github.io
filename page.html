@@ -146,7 +146,6 @@
         top: 50%;
         transform: translateY(-50%);
         left: 80%;
-        //bottom: 20%;
       }
       section {
         grid-area: section;
@@ -270,6 +269,7 @@
       }
       section .comment div span {
         padding: 0px 10px;
+        white-space: nowrap;
       }
       section .comment div .name:first-child {
         font-size: .9em;
@@ -373,6 +373,12 @@
             'mark';
           justify-content: center;
         }
+        section .comment {
+        grid-template-columns: auto;
+        grid-template-rows: auto auto;
+        //justify-content: space-between;
+        color: red;
+      }
         footer {
           grid-template-columns: auto;
           grid-template-rows: auto auto;
@@ -421,8 +427,8 @@
             <option>Choose category</option>
           </select>
           <div>
-            <button style="background: chocolate;left: 6px;">SEARCH</button>
-            <button style="background: #654;">Advanced</button>
+            <button style="background: chocolate;left: 3px;">SEARCH</button>
+            <button style="background: #654;right: 3px;">Advanced</button>
           </div>
         </form>
         <div class="bottom">
