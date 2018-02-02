@@ -36,6 +36,9 @@
         justify-content: space-between;
         padding: 10px 30px;
       }
+      header .hamburger {
+        display: none;
+      }
       header .logo {
         grid-area: logo;
       }
@@ -345,12 +348,57 @@
         * {
           white-space: normal;
         }
+        header .nav1, .nav2 {
+          display: none;
+        }
         header {
-          grid-template-areas:
-            'logo'
-            'nav1'
-            'nav2';
-          justify-content: space-around;
+          grid-template-areas: '. logo';
+          justify-content: start;
+        }
+        header .hamburger {
+          display: block;
+          border: 0px solid black;
+          padding-left: 15px;
+          width: 100px;
+          height: 100px;
+          background: darkgray;
+          margin-right: 50px;
+          border-radius: 10px;
+          display: grid;
+          grid-template-rows: auto auto auto;
+          justify-content: center;
+          align-content: center;
+          position: relative;
+          z-index: 1;
+          
+        }
+        header .hamburger span {
+          display: inline-block;
+          width: 70px;
+          height: 15px;
+          background: #666;
+          border-radius: 8px;
+          margin: 3px 0px;
+        }
+        header .hamburger .nav5{
+          display: none;
+          position: absolute;
+          left: 0px;
+          top: 0px;
+          width: 300px;
+          background: darkgray;
+          z-index: -1;
+          font-size: 2em;
+          padding: 80px 10px 10px;
+        }
+        header .hamburger .nav5 li {
+          padding: 10px 0px;
+        }
+        header .hamburger:focus {
+          outline: 0px solid black;
+        }
+        header .hamburger:focus .nav5 {
+          display: block;
         }
         header .logo {
           text-align: center;
@@ -390,10 +438,34 @@
           justify-content: center;
         }
       }
+      @media only screen and (max-width: 400px) {
+        
+      }
     </style>
   </head>
   <body>
     <header>
+      <button class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+        <nav class="nav5">
+          <ul style="border-bottom: 1px solid #666;">
+            <li><a href="">Rewards</a></li>
+            <li><a href="">Sell Books</a></li>
+            <li><a href="">My Account</a></li>
+            <li><a href="">Help</a></li>
+            <li><a href=""><i class="fa fa-search"></i></a></li>
+            <li><a href=""><i class="fa fa-shopping-cart"></i>&nbsp;CART(5)&nbsp;<i class="fa fa-angle-down"></i></a></li>
+          </ul>
+          <ul>
+            <li><a href="">MARKETPLACE</a></li>
+            <li><a href="">SEND A BOOK</a></li>
+            <li><a href="">BUSINESS LISTINGS</a></li>
+            <li><a href="">MAGAZINE</a></li>
+          </ul>
+        </nav>
+      </button>
       <div class="logo"><div><i class="fa fa-book"></i>&nbsp;LOREM</div></div>
       <nav class="nav1">
         <ul>
