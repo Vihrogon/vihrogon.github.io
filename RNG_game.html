@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>random number generator</title>
+    <script>
+      let start = 1000, stop = 9999, length = 6;
+      let time, startTime, endTime;
+
+      function rng(n1 = start, n2 = stop){
+        if (n1 <= n2){
+          let num = Math.floor(Math.random() * (n2 - n1 + 1) + n1);
+          return num;
+        } else 
+          return NaN;
+      }
+      //console.log(rng());
+
+      function range(n1 = start, n2 = stop, len = length, result = []){
+        if (n2 - n1 < len - 1){
+          return 'error';
+        } else if (result.length == len){
+          return result;
+        } else {
+          let num = rng(n1, n2);
+          for (n of result){
+            if (num == n){
+              return range(n1, n2, len, result);
+            }
+          }
+          result.push(num);
+          return range(n1, n2, len, result);
+        }
+      }
+      //console.log(range(1, 0, 1));
+
+      function oneOut(arr){
+        return {number: rng(0, arr.length - 1), array: arr};
+      }
+      //console.log(oneOut(range()));
+
+      function timer(to){
+        if (to == 'start'){
+          startTime = Date.now();
+        }
+        if (to == 'stop'){
+          endTime = Date.now();
+          time =  (endTime - startTime) / 1000;
+        }
+      }
+    </script>
+  <head>
+  <body>
+    <div onclick="let r = oneOut(range()); document.querySelector(`#num`).innerHTML = `${r.array[r.number]}`; document.querySelector(`#arr`).innerHTML = `${r.array}`;">
+      start
+    </div>
+    <span id="num"></span>
+    <span id="arr"></span>
+  </body>
+</html>
