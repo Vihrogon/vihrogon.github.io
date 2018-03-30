@@ -4,7 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>random number generator</title>
-    <script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>/*
+      let game = {len: 4, row: 20, col: 5};
+      function create(r, c, l){
+        for (let y = 0; y <= r; y++)
+      }*/
+      /**********/
+      /**********/
       let start = 1000, stop = 9999, length = 6;
       let time, startTime, endTime;
 
@@ -46,16 +53,165 @@
         }
         if (to == 'stop'){
           endTime = Date.now();
-          time =  (endTime - startTime) / 1000;
+          time = (endTime - startTime) / 1000;
         }
       }
+      //holds all game specific info
+      let game = {status: 'off', dificulty: 5, min: 1000, max: 9999, len: 5, rowPlayed: [], rowFirst: []};
+      //the main function for the game
+      function game_click(t, n, r, c){
+        if (!game.rowPlayed[r] && c){
+          if (game.rowFirst[r] == n){
+            t.style.borderColor = 'green';
+            game.rowPlayed[r] = 1;
+            //console.log(t)
+          }else {
+            t.style.borderColor = 'red';
+            game.rowPlayed[r] = 1;
+          }
+        }
+      }
+      $(document).ready(function(){
+        //the main control for the flow of the game
+        $('#game_button').click(function(){
+          if (game.status == 'off'){
+            $(this)[0].innerHTML = 'Pause';
+            game.status = 'playing';
+            $('#field').css('visibility', 'visible');
+            timer('start');
+            populate();
+            //$('#time')[0].innerHTML = 
+          }
+          else if (game.status == 'playing'){
+            $(this)[0].innerHTML = 'Continue';
+            game.status = 'paused';
+            $('#field').css('visibility', 'hidden');
+            timer('stop');
+            $('#time')[0].innerHTML = Number($('#time')[0].innerHTML) + time;
+          }
+          else if (game.status == 'paused'){
+            $(this)[0].innerHTML = 'Pause';
+            game.status = 'playing';
+            $('#field').css('visibility', 'visible');
+            timer('start');
+          }
+          //creates a new game
+          function populate(){
+            for (let r = 0; r < 20; r++){
+              a = oneOut(range(game.min, game.max, game.len));
+              game.rowFirst.push(a.array[a.number]);
+              game.rowPlayed.push(0);
+              let row = `<div class="game-row">`;
+              for (let c = 0; c <= game.dificulty; c++){
+                //console.log(!c ? a.array[a.number] : a.array[c - 1]);
+                row += `<span class="game-cell" onclick="game_click(this, ${a.array[c - 1]}, ${r}, ${c});">${!c ? a.array[a.number] : a.array[c - 1]}</span>`;
+              }
+              row += `</div>`;
+              $('#field')[0].innerHTML += row;
+            }
+          }
+        });
+      });
+      window.addEventListener('load', function(){
+      
+      });
     </script>
+    <style>
+      html, body {
+        margin: 0px;
+        padding: 0px;
+      }
+      main {
+        width: 600px;
+        height: 900px;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+      }
+      img {
+        align-self: center;
+      }
+      header {
+        display: grid;
+        grid-template-columns: auto auto;
+        grid-template-rows: 30px 100px;
+      }
+      header h3, footer p:nth-child(3) {
+        grid-column: 1 / span 2;
+        text-align: center;
+      }
+      header p, footer p {
+        display: inline;
+        margin: 0px;
+        padding: 0px 10px;
+      }
+      header h3 {
+        margin: 0px;
+      }
+      section {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        grid-template-columns: 1fr auto 1fr;
+        justify-content: space-between;
+      }
+      section #field {
+        grid-column: 1/ span 3;
+      }
+      section #game_button {
+        justify-self: center;
+        font-weight: bold;
+        color: white;
+        background-color: #319536;
+        border-radius: 10px;
+        padding: 10px 20px;
+        border-color:#319536;
+        outline: none;
+      }
+      section #field .game-row {
+        padding: 5px 0px;
+        text-align: center;
+      }
+      section #field .game-cell {
+        padding: 0px 10px;
+        border: 1px solid white;
+        border-radius: 3px;
+      }
+      footer {
+        display: grid;
+        grid-template-columns: auto auto;
+        grid-template-rows: 100px 20px;
+      }
+    </style>
   <head>
   <body>
-    <div onclick="let r = oneOut(range()); document.querySelector(`#num`).innerHTML = `${r.array[r.number]}`; document.querySelector(`#arr`).innerHTML = `${r.array}`;">
-      start
-    </div>
+    <!--<div onclick="let r = oneOut(range()); document.querySelector(`#num`).innerHTML = `${r.array[r.number]}`; document.querySelector(`#arr`).innerHTML = `${r.array}`;">start</div>
     <span id="num"></span>
-    <span id="arr"></span>
+    <span id="arr"></span>-->
+
+    <main>
+      <header>
+        <h3>Упражнение за очи</h3>
+        <img alt="a ginger girl with freckles" height="100" src="img/ginger.png">
+        <p>Ето го и новото упражнения на вашата, иначе толкова вече по-голяма и ползотворна визуална глътка. Това, което сме ви подготвили са 6 таблици, съдържащи числа, подредени в колони и редове. Първото число от всеки ред е повторено още веднъж някъде в реда. Вашата мисия е просто да го намерите възможно най-бързо.</p>
+      </header>
+      <section>
+        <div id="result">Result:&nbsp;<span id="score"></span></div>
+        <button id="game_button">Старт</button>
+        <div id="timer">
+          <img alt="clock" height="37" src="img/clock1.png">
+          <span id="time">0</span>
+        </div>
+        <div id="field">
+          (numbers)
+        </div>
+        <script>
+            
+          </script>
+      </section>
+      <footer>
+        <img alt="pulling the curtain off a window" height="100" src="img/window.png">
+        <p>Помнете, че тези игри са нещо, към което можете да се връщате и да тренирате всеки ден. Според зависи настроението и времето, с което разполагате броят таблици, които правите за сесия също може да варира - имате пълната свобода да избирате, колко време и какви ще са игрите, с които да се забавлявате, докато подобрявате себе си.</p>
+        <p>И разбира се помнете най-важното, всичко да се случва с доволна доза настроение.</p>
+      </footer>
+    </main>
   </body>
 </html>
