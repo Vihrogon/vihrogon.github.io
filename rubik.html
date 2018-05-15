@@ -1,0 +1,387 @@
+<style>
+body {
+  margin: 0px;
+}
+.view-rubik-cube {
+  position: relative;
+  width: 800px;
+  height: 800px;
+  background-color: gray;
+  transform-style: preserve-3d;
+  perspective: 2000px;
+  overflow: hidden;
+}
+.rubik {
+  position: absolute;
+  width: 0px;
+  height: 0px;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50% 0;
+  background-color: black;
+}
+.block {
+  position: absolute;
+  transform-style: preserve-3d;
+}
+.side {
+  position: absolute;
+  transform-origin: 50% 50% 0;
+  background-color: #2b2b2b;
+}
+.face {
+  margin: 5%;
+  width: 90%;
+  height: 90%;
+  border-radius: 10%;
+}
+.f0 {
+  background-color: #2e2e2e;
+}
+.f1 {
+  background-color: #c41e3a;
+}
+.f2 {
+  background-color: #ff5800;
+}
+.f3 {
+  background-color: #ffffff;
+}
+.f4 {
+  background-color: #ffd500;
+}
+.f5 {
+  background-color: #009e60;
+}
+.f6 {
+  background-color: #0051ba;
+}
+.button {
+  background: orange;
+  padding: 10px;
+  margin-left: 20px;
+}
+</style>
+<div class="view-rubik-cube"></div>
+<span id="button1" class="button">Front</span>
+<span id="button2" class="button">Back</span>
+<span id="button3" class="button">Up</span>
+<span id="button4" class="button">Down</span>
+<span id="button5" class="button">Left</span>
+<span id="button6" class="button">Right</span>
+<script>
+{let sin = Math.sin, cos = Math.cos, flr = Math.floor, abs = Math.abs
+function rotateX(deg){
+  let a = deg * Math.PI / 180
+  return [
+    1,      0,       0, 0,
+    0, cos(a), -sin(a), 0,
+    0, sin(a),  cos(a), 0,
+    0,      0,       0, 1
+  ]
+}
+function rotateY(deg){
+  let a = deg * Math.PI / 180
+  return [
+     cos(a), 0, sin(a), 0,
+          0, 1,      0, 0,
+    -sin(a), 0, cos(a), 0,
+          0, 0,      0, 1
+  ]
+}
+function rotateZ(deg){
+  let a = deg * Math.PI / 180
+  return [
+    cos(a), -sin(a), 0, 0,
+    sin(a),  cos(a), 0, 0,
+         0,       0, 1, 0,
+         0,       0, 0, 1
+  ]
+}
+//MULTiplies two MATrices
+function multmat(matrix1, matrix2){
+  let result = []
+  for (let y = 0; y < 4; y++){
+    for (let x = 0; x < 4; x++){
+      let temp = 0
+      for (let i = 0; i < 4; i++){
+        temp += matrix1[y * 4 + i] * matrix2[i * 4 + x]
+      }
+      result.push(temp)
+    }
+  }
+  return result
+}
+//returns a matrix with calculated positions and rotations
+function matrix(t, r = [0, 0, 0]){
+  let result = multmat(multmat(rotateZ(r[2]), rotateY(r[1])), rotateX(r[0]))
+  result[12] = t[0]
+  result[13] = t[1]
+  result[14] = t[2]
+  return result
+}
+//detirmines how for from the center the node is and in witch direction (+ -)
+function multiplier(a, d){
+  if (a < flr(d / 2)) return -(flr(d / 2) - a)
+  else if (a == flr(d / 2) && d % 2 != 0) return 0
+  else if (a > flr(d / 2) && d % 2 != 0) return a - flr(d / 2)
+  else if (a >= flr(d / 2) && d % 2 == 0) return a - abs(flr(d / 2) - 1)
+}
+//returns an array(arr) with all the elements in a given plane(p, i) from a 3D matrix(m)
+function plane(m, p, i){
+  let arr = []
+  if (p == 'z'){
+    arr = m[i]
+  }
+  else if (p == 'y'){
+    for (let n of m){
+      arr.push(n[i])
+    }
+  }
+  else if (p == 'x'){
+    for (let n of m){
+      for (let nn of n){
+        arr.push(nn[i])
+      }
+    }
+  }
+  //stringifies the 2D or 3D and splits at commas to flatten the array into a linear array
+  return arr.toString().split(',')
+}
+//does a 90 degrees clockwise rotation of the plane = p(x || y || z) at index = i(num) of the 3D matrix m
+function rotateMatrix(m, p, i){
+  let arr = []
+  if (p == 'z'){
+    let n = m.length
+    for (let x = 0; x < n / 2; x++){
+      for (let y = x; y < n - x - 1; y++){
+        let temp = m[i][x][y]
+        m[i][x][y] = m[i][y][n - 1 - x]
+        m[i][y][n - 1 - x] = m[i][n - 1 - x][n - 1 - y]
+        m[i][n - 1 - x][n - 1 - y] = m[i][n - 1 - y][x]
+        m[i][n - 1 - y][x] = temp
+      }
+    }
+    return m
+  }
+  else if (p == 'y'){
+    let n = m.length
+    for (let x = 0; x < n / 2; x++){
+      for (let y = x; y < n - x - 1; y++){
+        let temp = m[i][x][y]
+        m[i][x][y] = m[n - 1 - x][y][x]
+        m[i][y][n - 1 - x] = m[i][n - 1 - x][n - 1 - y]
+        m[i][n - 1 - x][n - 1 - y] = m[i][n - 1 - y][x]
+        m[i][n - 1 - y][x] = temp
+      }
+    }
+    return m
+  }
+  else if (p == 'x'){
+    //
+  }
+  return arr
+}}
+
+class Rubik {
+  constructor (d, s, p, r){
+    this.dificulty = d//Number
+    this.size      = s//Number
+    this.position  = p//[x, y, z]
+    this.rotation  = r//[x, y, z]
+    this.blocks    = []
+    this.matrix    = []
+    let num = 0
+    for (let z = 0; z < d; z ++){
+      this.matrix.push([])
+      for (let y = 0; y < d; y ++){
+        this.matrix[z].push([])
+        for (let x = 0; x < d; x ++){
+          //an array containig the face each side belongs to [front, back, up, down, left, right]
+          let faces = [
+            z == d - 1 ? 1 : 0,
+            z ==     0 ? 2 : 0,
+            y ==     0 ? 3 : 0,
+            y == d - 1 ? 4 : 0,
+            x ==     0 ? 5 : 0,
+            x == d - 1 ? 6 : 0
+          ]
+          if (faces.some(item => item != 0)){
+            //adds a reference to the coresponding block in the matrix
+            this.matrix[z][y].push(num)
+            num++
+            let X = multiplier(x, d), Y = multiplier(y, d), Z = multiplier(z, d)
+            this.blocks.push(new Block(
+              d,
+              s,
+              //sets the positions for the blocks based on the multiplyers and the size and dificulty of the cube
+              [ (s / 2 - s / d / 2) + X * s / d / 2 + ((d % 2 == 0) ? ((Math.abs(X) != 1) ? (X - 1 * Math.sign(X)) * (s / d / 2) : 0) : X * s / d / 2),
+                (s / 2 - s / d / 2) + Y * s / d / 2 + ((d % 2 == 0) ? ((Math.abs(Y) != 1) ? (Y - 1 * Math.sign(Y)) * (s / d / 2) : 0) : Y * s / d / 2),
+                Z * s / d / 2 + ((d % 2 == 0) ? ((Math.abs(Z) != 1) ? (Z - 1 * Math.sign(Z)) * (s / d / 2) : 0) : Z * s / d / 2)],
+              [0, 0, 0],
+              faces
+            ))
+          }
+          else this.matrix[z][y].push(NaN)
+        }
+      }
+    }
+  }
+}
+class Block {
+  constructor (d, s, p, r, c){
+    this.size     = s
+    this.position = [-(s / 2), -(s / 2), 0]//
+    this.rotation = r
+    this.sides    = [//adjusts the sides to orient into cubes
+      new Side(s / d, [p[0]            , p[1]            , p[2] + s / d / 2], [  0,   0, 0], c[0]),//front
+      new Side(s / d, [p[0]            , p[1]            , p[2] - s / d / 2], [  0, 180, 0], c[1]),//back
+      new Side(s / d, [p[0]            , p[1] - s / d / 2, p[2]            ], [-90,   0, 0], c[2]),//up
+      new Side(s / d, [p[0]            , p[1] + s / d / 2, p[2]            ], [ 90,   0, 0], c[3]),//down
+      new Side(s / d, [p[0] - s / d / 2, p[1]            , p[2]            ], [  0,  90, 0], c[4]),//left
+      new Side(s / d, [p[0] + s / d / 2, p[1]            , p[2]            ], [  0, -90, 0], c[5]) //right
+    ]
+  }
+}
+
+class Side {
+  constructor (s, p, r, c){
+    this.size     = s
+    this.position = p
+    this.rotation = r
+    this.color    = c
+  }
+}
+
+function html(i){
+  let e = document.querySelector('.view-rubik-cube')
+  e.innerHTML = ''
+  let c = () => document.createElement('div')
+  let a = (e, m) => e.appendChild(m)
+  let r = c()
+  r.className = 'rubik'
+  r.style.transform = `matrix3d(${matrix(i.position, i.rotation)})`
+  for (let n of i.blocks){
+    let b = c()
+    b.className = 'block'
+    b.style.width = `${n.size}`
+    b.style.height = `${n.size}`
+    b.style.transform = `matrix3d(${matrix(n.position, n.rotation)})`
+    for (let nn of n.sides){
+      let s = c()
+      s.className = 'side'
+      s.style.width = `${nn.size + .5}`//this + .5 is so the edges always touch
+      s.style.height = `${nn.size + .5}`//this + .5 is so the edges always touch
+      s.style.transform = `matrix3d(${matrix(nn.position, nn.rotation)})`
+      let f = c()
+      f.className = `face f${nn.color}`
+      a(s, f)
+      a(b, s)
+    }
+    a(r, b)
+  }
+  a(e, r)
+}
+
+function updateHTML(i){
+  let r = document.querySelector('.rubik')
+  r.style.transform = `matrix3d(${matrix(i.position, i.rotation)})`
+  for (let n in i.blocks){
+    let b = document.querySelectorAll('.block')
+    b[n].style.transform = `matrix3d(${matrix(i.blocks[n].position, i.blocks[n].rotation)})`
+    for (let nn in n.sides){
+      let m = document.querySelectorAll('.side')
+      m[nn].style.transform = `matrix3d(${matrix(i.blocks[n].sides[nn].position, i.blocks[n].sides[nn].rotation)})`
+    }
+  }
+}
+
+let rubik = new Rubik(3, 300, [400, 400, 0], [45, 45, 0])
+html(rubik)
+
+let planes = {x: 0, y: 1, z: 2}
+function anim(p, i, t){
+  let array = plane(rubik.matrix, p, i)
+  for (let n of array){
+    if (!isNaN(n) && t > 0){
+      console.log
+      rubik.blocks[n].rotation[planes[p]] += 1
+    }
+  }
+  updateHTML(rubik)
+  requestAnimationFrame(() => anim(p, i, t - 1))
+}
+
+function test(m, p, i){
+  //extract a 2D matrix representing the specified plane
+  let arr = []
+  if (p == 'z'){
+    arr = m[i]
+  }
+  else if (p == 'y'){
+    for (let n of m){
+      arr.push(n[i])
+    }
+  }
+  else if (p == 'x'){
+    for (let n in m){
+      arr.push([])
+      for (let nn in m[n]){
+        arr[n].push(m[n][nn][i])
+      }
+    }
+  }
+  //rotate the 2D matrix by 90 degrees counterclockwise
+  let n = arr.length
+  for (let x = 0; x < n / 2; x++){
+    for (let y = x; y < n - x - 1; y++){
+      let temp = arr[x][y]
+      arr[x][y] = arr[y][n - 1 - x]
+      arr[y][n - 1 - x] = arr[n - 1 - x][n - 1 - y]
+      arr[n - 1 - x][n - 1 - y] = arr[n - 1 - y][x]
+      arr[n - 1 - y][x] = temp
+    }
+  }
+  //return the 2D matrix back into the 3D matrix
+  if (p == 'z'){
+    m[i] = arr
+  }
+  else if (p == 'y'){
+    for (let n in arr){
+      m[n][i] = arr[n]
+    }
+  }
+  else if (p == 'x'){
+    for (let n in arr){
+      for (let nn in arr[n]){
+        m[n][nn][i] = arr[n][nn]
+      }
+    }
+  }
+}
+
+//listeners
+document.querySelector('#button1').addEventListener('click',() => {
+  requestAnimationFrame(() => anim('z', 2, 90))
+  test(rubik.matrix, 'z', 2)
+})
+document.querySelector('#button2').addEventListener('click',() => {
+  requestAnimationFrame(() => anim('z', 0, 90))
+  test(rubik.matrix, 'z', 0)
+})
+document.querySelector('#button3').addEventListener('click',() => {
+  requestAnimationFrame(() => anim('y', 0, 90))
+  test(rubik.matrix, 'y', 0)
+})
+document.querySelector('#button4').addEventListener('click',() => {
+  requestAnimationFrame(() => anim('y', 2, 90))
+  test(rubik.matrix, 'y', 2)
+})
+document.querySelector('#button5').addEventListener('click',() => {
+  requestAnimationFrame(() => anim('x', 0, 90))
+  test(rubik.matrix, 'x', 0)
+})
+document.querySelector('#button6').addEventListener('click',() => {
+  requestAnimationFrame(() => anim('x', 2, 90))
+  test(rubik.matrix, 'x', 2)
+})
+</script>
