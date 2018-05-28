@@ -127,7 +127,7 @@ function multiplier(a, d){
   else if (a >= flr(d / 2) && d % 2 == 0) return a - abs(flr(d / 2) - 1)
 }
 //returns an array(arr) with all the elements in a given plane(p, i) from a 3D matrix(m)
-function plane(m, p, i){
+function planeElements(m, p, i){
   let arr = []
   if (p == 'z'){
     arr = m[i]
@@ -297,21 +297,43 @@ function updateHTML(i){
 
 let rubik = new Rubik(3, 300, [400, 400, 0], [45, 45, 0])
 html(rubik)
-
-let planes = {x: 0, y: 1, z: 2}
-function anim(p, i, t){
-  let array = plane(rubik.matrix, p, i)
-  for (let n of array){
-    if (!isNaN(n) && t > 0){
-      console.log
-      rubik.blocks[n].rotation[planes[p]] += 1
+//locks the animation until it finishes
+let locked = false
+/*accepts p = the axis, i = index, r = angle of rotation,
+continuing = is the call from inside the anim function*/
+function anim(p, i, r, continuing = false){
+  if (!locked || continuing){
+    /*checks if not locked and then immediately locks it
+    to prevent calls from outside intil it is complete*/
+    locked = true
+    let complete = 0
+    let planes = {x: 0, y: 1, z: 2}
+    let array = planeElements(rubik.matrix, p, i)
+    for (let n of array){
+      if (!isNaN(n) && r > 0) rubik.blocks[n].rotation[planes[p]] += 1
+      if (!isNaN(n) && r <= 0) complete++
+    }
+    if (complete >= (rubik.dificulty - 1) * 4) {
+      /*for (let n of array){
+        for (let nn = 0; nn < 6; nn++){
+          rubik.blocks[n].sides[nn].rotation = rubik.blocks[n].rotation
+          console.log(rubik.blocks[n].sides[nn].rotation)
+        }
+        rubik.blocks[n].rotation = [0, 0, 0]
+      }*/
+      //callback to the virtual matrix rotation
+      rotatePlane(rubik.matrix, p, i)
+      locked = false
+      updateHTML(rubik)
+    }
+    else{
+      updateHTML(rubik)
+      requestAnimationFrame(() => anim(p, i, r - 1, true))
     }
   }
-  updateHTML(rubik)
-  requestAnimationFrame(() => anim(p, i, t - 1))
 }
 
-function test(m, p, i){
+function rotatePlane(m, p, i){
   //extract a 2D matrix representing the specified plane
   let arr = []
   if (p == 'z'){
@@ -339,6 +361,13 @@ function test(m, p, i){
       arr[y][n - 1 - x] = arr[n - 1 - x][n - 1 - y]
       arr[n - 1 - x][n - 1 - y] = arr[n - 1 - y][x]
       arr[n - 1 - y][x] = temp
+      /*for (let s = 0; s < 6; s++){
+        let orig = rubik.blocks[arr[x][y]].sides[s].position
+        rubik.blocks[arr[x][y]].sides[s].position = rubik.blocks[arr[y][n - 1 - x]].sides[s].position
+        rubik.blocks[arr[y][n - 1 - x]].sides[s].position = rubik.blocks[arr[n - 1 - x][n - 1 - y]].sides[s].position
+        rubik.blocks[arr[n - 1 - x][n - 1 - y]].sides[s].position = rubik.blocks[arr[n - 1 - y][x]].sides[s].position
+        rubik.blocks[arr[n - 1 - y][x]].sides[s].position = orig
+      }*/
     }
   }
   //return the 2D matrix back into the 3D matrix
@@ -357,31 +386,38 @@ function test(m, p, i){
       }
     }
   }
+  /*
+  let n = m.length
+  if (p == 'z'){
+    for (let x = 0; x < n / 2; x++){
+      for (let y = x; y < n - x - 1; y++){
+        let temp = m[i][x][y]
+        m[i][x][y] = m[i][y][n - 1 - x]
+        m[i][y][n - 1 - x] = m[i][n - 1 - x][n - 1 - y]
+        m[i][n - 1 - x][n - 1 - y] = m[i][n - 1 - y][x]
+        m[i][n - 1 - y][x] = temp
+      }
+    }
+  }*/
 }
 
 //listeners
 document.querySelector('#button1').addEventListener('click',() => {
   requestAnimationFrame(() => anim('z', 2, 90))
-  test(rubik.matrix, 'z', 2)
 })
 document.querySelector('#button2').addEventListener('click',() => {
   requestAnimationFrame(() => anim('z', 0, 90))
-  test(rubik.matrix, 'z', 0)
 })
 document.querySelector('#button3').addEventListener('click',() => {
   requestAnimationFrame(() => anim('y', 0, 90))
-  test(rubik.matrix, 'y', 0)
 })
 document.querySelector('#button4').addEventListener('click',() => {
   requestAnimationFrame(() => anim('y', 2, 90))
-  test(rubik.matrix, 'y', 2)
 })
 document.querySelector('#button5').addEventListener('click',() => {
   requestAnimationFrame(() => anim('x', 0, 90))
-  test(rubik.matrix, 'x', 0)
 })
 document.querySelector('#button6').addEventListener('click',() => {
   requestAnimationFrame(() => anim('x', 2, 90))
-  test(rubik.matrix, 'x', 2)
 })
 </script>
