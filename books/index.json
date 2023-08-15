@@ -1,0 +1,22 @@
+[
+    {
+        "name": "The caves of steel",
+        "author": "Isaac Asimov",
+        "path": "/books/book_1.json"
+    },
+    {
+        "name": "The naked sun",
+        "author": "Isaac Asimov",
+        "path": "/books/book_2.json"
+    },
+    {
+        "name": "The robots of dawn",
+        "author": "Isaac Asimov",
+        "path": "/books/book_3.json"
+    },
+    {
+        "name": "Robots and empire",
+        "author": "Isaac Asimov",
+        "path": "/books/book_4.json"
+    }
+]
