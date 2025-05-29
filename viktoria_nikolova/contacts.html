@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="BG">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Виктория Николова</title>
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+        <header>
+            <input type="checkbox" id="toggle" />
+            <label for="toggle">
+                <div class="open">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div class="close"></div>
+            </label>
+            <nav>
+                <a href="./">НАЧАЛО</a>
+                <a href="./consultations.html">КОНСУЛТАЦИИ</a>
+                <a href="./contacts.html">КОНТАКТИ</a>
+            </nav>
+        </header>
+        <main>
+            <section>
+                <div>
+                    <a class="call" target="_blank" href="https://www.facebook.com/ViktoriqNikolovaAstrology">Моят Фейсбук</a>
+                    <a class="call" href="tel:0888802822">Поръчка по Телефона</a>
+                </div>
+                <form
+                action="mailto:v.d.nikolova53@gmail.com?subject=Заявка%20за%20консултация"
+                method="POST"
+                enctype="text/plain">
+                    <input name="имейл" type="email" placeholder="Имейл" required />
+                    <input name="имена" type="text" placeholder="Имена" required />
+                    <textarea name="съобщение" placeholder="Съобщение" required></textarea>
+                    <button type="submit">Изпрати съобщение</button>
+                  </form>
+            </section>
+        </main>
+    </body>
+</html>
