@@ -18,5 +18,10 @@
         "name": "Robots and empire",
         "author": "Isaac Asimov",
         "path": "/books/book_4.json"
+    },
+    {
+        "name": "Prelude to Foundation",
+        "author": "Isaac Asimov",
+        "path": "/books/book_5.json"
     }
 ]
