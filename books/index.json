@@ -23,5 +23,10 @@
         "name": "Prelude to Foundation",
         "author": "Isaac Asimov",
         "path": "/books/book_5.json"
+    },
+    {
+        "name": "Forward the Foundation",
+        "author": "Isaac Asimov",
+        "path": "/books/book_6.json"
     }
 ]
